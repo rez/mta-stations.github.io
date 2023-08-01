@@ -1,4 +1,5 @@
 require("dotenv").config();
+const cors = require("cors");
 const express = require("express");
 const { createClient } = require("mta-realtime-subway-departures");
 
@@ -8,7 +9,7 @@ const port = process.env.PORT || 3000;
 const MTA_API_KEY = process.env.MTA_KEY;
 const client = createClient(MTA_API_KEY);
 
-app.get("/", (req, res) => {
+app.get("/", cors(), (req, res) => {
   let id = req.query.id;
   let result = [];
   client.departures(id).then((response) => {
