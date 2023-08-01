@@ -38,7 +38,7 @@ function createObj(name, train, direction) {
   return {
     name,
     line: train.routeId,
-    time: train.time, //new Date(train.time * 1000).toLocaleTimeString(),
+    time: train.time, 
     direction,
   };
 }
