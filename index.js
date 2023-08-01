@@ -16,22 +16,21 @@ app.get("/", cors(), (req, res) => {
   client.departures(id).then((response) => {
     name = response.name;
     response.lines.forEach((line) => {
-      line.departures["S"].forEach((train) =>
-        result.push(createObj(response.name, train, "South"))
-      );
+      line.departures["S"].forEach((train) => {
+        result.push(createObj(response.name, train, "South"));
+      });
       line.departures["N"].forEach((train) =>
         result.push(createObj(response.name, train, "North"))
       );
     });
 
     result.sort((a, b) => a.time - b.time);
-
-    result.forEach(
-      (train) =>
-        (train.time = new Date(train.time * 1000).toLocaleTimeString("en-US", {
-          timeZone: "America/New_York",
-        }))
-    );
+    result.forEach((train) => {
+      train.time = Math.round(
+        (new Date(train.time * 1000).getTime() - Date.now()) / 1000 / 60
+      );
+      train.time = train.time + ` minute${train.time > 1 ? "s" : ""}`;
+    });
     res.status(200).json({ status: "success", data: { result, name } });
   });
 });
