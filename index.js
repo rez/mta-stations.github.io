@@ -3,7 +3,7 @@ const express = require("express");
 const { createClient } = require("mta-realtime-subway-departures");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const MTA_API_KEY = process.env.MTA_KEY;
 const client = createClient(MTA_API_KEY);
@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`MTA app listening on port ${port}`);
 });
 
@@ -38,7 +38,7 @@ function createObj(name, train, direction) {
   return {
     name,
     line: train.routeId,
-    time: train.time, 
+    time: train.time,
     direction,
   };
 }
