@@ -12,7 +12,9 @@ const client = createClient(MTA_API_KEY);
 app.get("/", cors(), (req, res) => {
   let id = req.query.id;
   let result = [];
+  let name = "";
   client.departures(id).then((response) => {
+    name = response.name;
     response.lines.forEach((line) => {
       line.departures["S"].forEach((train) =>
         result.push(createObj(response.name, train, "South"))
@@ -25,9 +27,12 @@ app.get("/", cors(), (req, res) => {
     result.sort((a, b) => a.time - b.time);
 
     result.forEach(
-      (train) => (train.time = new Date(train.time * 1000).toLocaleTimeString())
+      (train) =>
+        (train.time = new Date(train.time * 1000).toLocaleTimeString("en-US", {
+          timeZone: "America/New_York",
+        }))
     );
-    res.status(200).json({ status: "success", data: result });
+    res.status(200).json({ status: "success", data: { result, name } });
   });
 });
 
